@@ -38,7 +38,5 @@ while running:
 
     screen.fill((255, 255, 255))
     Sprite.draw(screen)
-
-pygame.display.update()
-
-clock.tick(60)
+    pygame.display.update()
+    clock.tick(60)

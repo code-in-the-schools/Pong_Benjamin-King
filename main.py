@@ -7,10 +7,11 @@ img_path = os.path.join('Rect.png')
 class Ball(object):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.transform.scale(self.image,(600,600))
+      
 
         Paddle.image = pygame.image.load('Ball.png')
         self.image = Paddle.image
+        self.image = pygame.transform.scale(self.image,(600,600))
 
         self.x = 200
         self.y = 200
@@ -57,6 +58,5 @@ while running:
 
     screen.fill((255, 255, 255))
     Sprite.draw(screen)
-
-pygame.display.update()
+    pygame.display.update()
 
