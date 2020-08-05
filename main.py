@@ -2,57 +2,104 @@ import pygame
 import sys
 import os
 
-img_path = os.path.join('Ball1.png')
+img_path = os.path.join('Wall.png')
+img_path = os.path.join('Blue.png')
+img_path = os.path.join('Yellow.png')
+
+
+class WallObj(object):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+
+        WallObj.image = pygame.image.load('Wall.png')
+
+        self.image = pygame.transform.scale(self.image, (50, 50))
+
+        self.x = 50
+        self.y = 50
+        self.x_velocity = 1
+        self.y_velocity = 1
+
+    def draw(self, surface):
+
+        surface.blit(self.image, (self.x, self.y))
+
+    def bounce(self, screen_width, screen_height, collider):
+        self.x += self.x_velocity
+        self.y += self.y_velocity
+
+        if (self.y <= 0):
+            self.y_velocity = 1
+
+        if (self.y >= screen_height - 50):
+            self.y_velocity = -1
+
+        if (self.y >= screen_width - 50 or collider):
+            self.x_velocity = -1
+
+        if (self.x <= 0):
+            self.x_velocity = 1
 
 
 class Paddle(object):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
-        self.rect = pygame.draw.rect(screen, (0, 0, 0), (10, 10, 40, 100))
-        self.rect = self.rect
-        #self.rect = pygame.transform.scale(self.rect,(600,600))
+        Paddle.image = pygame.image.load('Blue.png')
 
-        self.x = 200
-        self.y = 300
-        self.hitbox = (self.x, self.y, 205, 205)
+        self.image = pygame.transform.scale(self.image, (20, 100))
+
+        self.x = 10
+        self.y = 100
+        self.x_velocity = 1
+        self.y_velocity = 1
 
     def draw(self, surface):
-        pygame.draw.rect(screen, (0, 0, 0), (10, 10, 20, 90))
+        surface.blit(self.image, (self.x, self.y))
 
-    def movement(self):
-      if event.type == KEYDOWN
-        key = pygame.key.get_pressed()
+    def move(self):
+        pos = pygame.mouse.get_pos()
 
-        if key[pygame.K_DOWN]:
-            self.y -= 1
-        if key[pygame.K_UP]:
-            self.y += 1
+        self.y = pos[1]
+        #self.x = pos[0]
+
+    def hit(self, obj):
+        if (obj.x + 25 >= self.x and obj.x + 25 <= self.x + 20):
+
+            if (obj.y + 25 >= self.y and obj.y + 25 <= self.y + 100):
+
+                print("True")
+                return True
+            else:
+                return False
 
 
-class Ball(object):
+class walltop(object):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
 
-        Ball.image = pygame.image.load('Ball1.png')
-        self.image = Ball.image
-        self.image = pygame.transform.scale(self.image, (50, 50))
+        walltop.image = pygame.image.load('Yellow.png')
 
-        self.x = 50
-        self.y = 50
-        self.hitbox = (self.x, self.y, 55, 55)
+        self.image = pygame.transform.scale(self.image, (700, 30))
+
+        self.x = 0
+        self.y = 700
+        self.x_velocity = 1
+        self.y_velocity = 1
 
     def draw(self, surface):
         surface.blit(self.image, (self.x, self.y))
 
 
+
 pygame.init()
-screen_width = 600
+screen_width = 700
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-Sprite = Paddle()
-Sprite1 = Ball()
+Sprite1 = WallObj()
+Sprite2 = Paddle()
+bord = walltop()
 running = True
 
 while running:
@@ -64,10 +111,10 @@ while running:
                 sys.exit()
                 running = False
 
-
-
-
     screen.fill((255, 255, 255))
-    Sprite.movement()
-    Sprite.draw(screen)
+    Sprite1.draw(screen)
+    Sprite2.draw(screen)
+    bord.draw(screen)
+    Sprite2.move()
+    Sprite1.bounce(screen_height, screen_width, Sprite2.hit(Sprite1))
     pygame.display.update()
